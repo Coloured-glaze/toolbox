@@ -18,12 +18,12 @@ BenchmarkR2-8    	   11523	    103789 ns/op	     120 B/op	       3 allocs/op
 
 // 乱序输出字符串
 func RandText(str string) string {
+	tmp := strings.Builder{}
+	tmp.Grow(len(str))
 	m := make(map[int]rune)
 	for i, v := range str {
 		m[i] = v
 	}
-	tmp := strings.Builder{}
-	tmp.Grow(len(str))
 	for _, v := range m {
 		tmp.WriteRune(v)
 	}
