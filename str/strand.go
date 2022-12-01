@@ -58,8 +58,8 @@ func rands(runstr []rune) []rune {
 			tmp[n] = runstr[i]
 		} else if tmp[n] != 0 { // 不为空
 			rand.Seed(time.Now().UnixNano())
-			switch rand.Intn(10) {
-			case 0:
+			switch rand.Intn(5) {
+			case 1, 3:
 				for j := 0; j < len(runstr); j++ {
 					if tmp[j] == 0 {
 						tmp[j] = runstr[i]

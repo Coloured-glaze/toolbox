@@ -1,17 +1,13 @@
 package f
 
 import (
-	"context"
 	"fmt"
 	"runtime"
 	"sync"
 	"time"
 )
 
-/*
- f.FOR(8, 5)
-*/
-
+// f.FOR(8, 5)
 // for test
 func FOR(g, t int) {
 	if g > 256 {
@@ -25,26 +21,25 @@ func FOR(g, t int) {
 		t = 1
 	}
 	j := int64(0)
-	times := time.Duration(t) // 时间
-
-	wg := sync.WaitGroup{}
-	wg.Add(g)
+	var wg sync.WaitGroup
+	runtime.GOMAXPROCS(0)
 	os := runtime.GOOS
 	arch := runtime.GOARCH
 	cpu := runtime.NumCPU()
-	// runtime.GOMAXPROCS(0)
-
-	fmt.Printf("OS:%v\tARCH:%v\tCPU:%v\n", os, arch, cpu)
-
+	fmt.Printf("os: %v\tarch: %v\tCPU: %v\n", os, arch, cpu)
 	start := time.Now()
+	wg.Add(g)
 	for i := 0; i < g; i++ {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second*times)
-		go func(ctx context.Context, cancel context.CancelFunc) {
+		ch := make(chan bool)
+		go func() {
+			time.Sleep(time.Second * time.Duration(t))
+			ch <- true
+		}()
+		go func() {
 			var k = int64(0)
 			for {
 				select {
-				case <-ctx.Done():
-					cancel()
+				case <-ch:
 					goto label
 				default:
 					k++
@@ -53,9 +48,9 @@ func FOR(g, t int) {
 		label:
 			j += k
 			wg.Done()
-		}(ctx, cancel)
+		}()
 	}
 	wg.Wait()
-	fmt.Printf("%.3f 秒内 %v 个协程加了 %v 次\n",
-		time.Since(start).Seconds(), g, j)
+	ts := time.Since(start).Seconds()
+	fmt.Printf("%.3f 秒内 %v 个协程加了 %v 次\n", ts, g, j)
 }
