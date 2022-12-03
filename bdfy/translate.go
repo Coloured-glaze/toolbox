@@ -74,3 +74,39 @@ func Tr(Q string) (*Trans, error) {
 	}
 	return t, nil
 }
+
+/*
+package main
+
+import (
+	"fmt"
+
+	"github.com/Coloured-glaze/toolbox/bdfy"
+)
+
+var (
+	// 改成您的APP ID
+	AppId string = ""
+	// 改成您的密钥
+	SecretKey string = ""
+)
+
+func init() {
+	bdfy.AppId, _ = AppId
+	bdfy.SecretKey, _ = SecretKey
+}
+
+func main() {
+	str := "about"
+
+	tr, err := bdfy.Tr(str)
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(tr.Tresult[0].Dst)
+}
+
+output :
+关于
+
+*/
