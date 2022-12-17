@@ -48,8 +48,8 @@ var (
 	Bdurl string = "http://api.fanyi.baidu.com/api/trans/vip/translate?"
 )
 
-func Tr(Q string) (*Trans, error) {
-	t := new(Trans)
+func Tr(Q string) (Trans, error) {
+	t := Trans{}
 	sign := check.MD5(AppId + Q + Salt + SecretKey)
 	tmp := strings.Builder{}
 	tmp.Grow(len(Q) + 192)
