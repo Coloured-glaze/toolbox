@@ -35,7 +35,7 @@ func Parsezip(zipFile string, filemap map[string][]*zip.File) error {
 
 // 打开map中的ttf文件
 func LoadFontFaces(dc *gg.Context, points float64, path string, name string, filemap map[string][]*zip.File) error {
-	readerData, err, ok := Findfile(path, name, filemap)
+	readerData, ok, err := Findfile(path, name, filemap)
 	if err != nil {
 		return err
 	}
@@ -62,7 +62,7 @@ func LoadFontFaces(dc *gg.Context, points float64, path string, name string, fil
 }
 
 // 查找map中的文件 并打开
-func Findfile(path string, name string, filemap map[string][]*zip.File) (io.ReadCloser, error, bool) {
+func Findfile(path string, name string, filemap map[string][]*zip.File) (io.ReadCloser, bool, error) {
 	var readerData io.ReadCloser
 	var err error
 	ok := false
@@ -70,11 +70,11 @@ func Findfile(path string, name string, filemap map[string][]*zip.File) (io.Read
 		if strings.Contains(filemap[path][i].Name, name) {
 			readerData, err = filemap[path][i].Open()
 			if err != nil {
-				return nil, err, ok
+				return nil, ok, err
 			}
 			ok = true
 			break
 		}
 	}
-	return readerData, nil, ok
+	return readerData, ok, nil
 }
