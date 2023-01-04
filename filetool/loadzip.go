@@ -38,8 +38,8 @@ func Parsezip(zipFile string, filemap map[string][]*zip.File) error {
 }
 
 // 打开map中的ttf文件
-func LoadFontFaces(dc *gg.Context, points float64, path string, name string, open bool, filemap map[string][]*zip.File) error {
-	ft := Findfile(path, name, open, filemap)
+func LoadFontFaces(dc *gg.Context, points float64, path string, name string, filemap map[string][]*zip.File) error {
+	ft := Findfile(path, name, true, filemap) // open
 	if ft.Err != nil {
 		return ft.Err
 	}
