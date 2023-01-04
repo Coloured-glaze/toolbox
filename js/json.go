@@ -1,16 +1,21 @@
 package js
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
+
+	jsoniter "github.com/json-iterator/go"
+)
+
+var (
+	json = jsoniter.ConfigCompatibleWithStandardLibrary
 )
 
 // 解析json配置
-func Analyze(a *any, config string) error {
+func Analyze(a any, config string) error {
 	b, err := os.ReadFile(config)
 	if err != nil {
-		return fmt.Errorf("radFile: %v", err)
+		return fmt.Errorf("read file: %v", err)
 	}
 	err = json.Unmarshal(b, &a)
 	if err != nil {
@@ -27,7 +32,7 @@ func Save(a any, config string, perm os.FileMode) error {
 	}
 	err = os.WriteFile(config, b, perm)
 	if err != nil {
-		return fmt.Errorf("writeFile: %v", err)
+		return fmt.Errorf("write file: %v", err)
 	}
 	return nil
 }

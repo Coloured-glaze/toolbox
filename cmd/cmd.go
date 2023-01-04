@@ -3,8 +3,6 @@ package cmd
 import (
 	"fmt"
 	"os/exec"
-	"runtime"
-	"strconv"
 	"strings"
 
 	"github.com/Coloured-glaze/toolbox/str"
@@ -34,21 +32,3 @@ func ChCmd(ex string, args ...string, time int) {
 
 }
 */
-// 内存占用
-func GetRAM() string {
-	if runtime.GOOS == "windows" {
-		return "Error! Don't Windows!"
-	}
-	R := Cmd("free -m | awk '/Mem/ {print $2\" \"$3}'")
-	if len(R) == 0 {
-		R = Cmd("free -m | awk '/内存/ {print $2\" \"$3}'")
-	}
-	if len(R) > 2 {
-		sp := strings.Split(R, " ")
-		Per, _ := strconv.ParseFloat(sp[0], 64)
-		Per2, _ := strconv.ParseFloat(sp[1], 64)
-		Per3 := Per2 / Per * 100
-		return fmt.Sprintf(sp[1]+"M/"+sp[0]+"M") + fmt.Sprintf("(%.2f%%)", Per3)
-	}
-	return "null"
-}

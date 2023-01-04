@@ -77,28 +77,23 @@ func Tr(Q string) (Trans, error) {
 
 /*
 package main
-
 import (
 	"fmt"
 
 	"github.com/Coloured-glaze/toolbox/bdfy"
 )
-
 var (
 	// 改成您的APP ID
 	AppId string = ""
 	// 改成您的密钥
 	SecretKey string = ""
 )
-
 func init() {
-	bdfy.AppId, _ = AppId
-	bdfy.SecretKey, _ = SecretKey
+	bdfy.AppId = AppId
+	bdfy.SecretKey= SecretKey
 }
-
 func main() {
 	str := "about"
-
 	tr, err := bdfy.Tr(str)
 	if err != nil {
 		panic(err)
@@ -108,5 +103,4 @@ func main() {
 
 output :
 关于
-
 */
