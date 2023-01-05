@@ -12,8 +12,8 @@ import (
 )
 
 type Ftool struct {
-	Open bool          // 是否打开
 	Ok   bool          // 是否存在
+	Open bool          // 是否打开
 	Err  error         // 错误
 	Data io.ReadCloser //
 	File *zip.File     //
@@ -26,7 +26,7 @@ func Parsezip(zipFile string, filemap map[string][]*zip.File) error {
 		return err
 	}
 	dir := ""
-	for i := 0; i < len(data.File); i++ {
+	for i := range data.File {
 		if data.File[i].FileInfo().IsDir() {
 			dir = data.File[i].Name
 			filemap[dir] = make([]*zip.File, 0, 12)

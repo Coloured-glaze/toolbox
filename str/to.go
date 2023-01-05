@@ -6,6 +6,16 @@ import (
 )
 
 // []byte 转 string
+func Btos(b []byte) string {
+	return BytetoStr(b)
+}
+
+// string 转 []byte
+func Stob(str string) []byte {
+	return StrtoByte(str)
+}
+
+// []byte 转 string
 func BytetoStr(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b)) //转成 string
 }

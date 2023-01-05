@@ -3,13 +3,14 @@ package f
 import (
 	"fmt"
 	"runtime"
+	"strconv"
 	"sync"
-	"time"
+
+	"github.com/Coloured-glaze/toolbox/cmd"
 )
 
-// f.FOR(8, 5)
-// for test
-func FOR(g, t int) {
+// f.Forc(8, 5)
+func Forc(g, t int) {
 	if g > 256 {
 		g = 256
 	} else if g <= 0 {
@@ -21,22 +22,27 @@ func FOR(g, t int) {
 		t = 1
 	}
 	j := int64(0)
-	t2 := time.Duration(t)
+	times := float64(t) // 时间
 	var wg sync.WaitGroup
 	runtime.GOMAXPROCS(0)
 	os := runtime.GOOS
 	arch := runtime.GOARCH
 	cpu := runtime.NumCPU()
 	fmt.Printf("OS: %v\tARCH: %v\tCPU: %v\n", os, arch, cpu)
-	start := time.Now()
+
+	ss, _ := strconv.ParseFloat(strconv.Itoa(int(times)), 64)
+	sleep := "sleep " + strconv.Itoa(int(ss)) + "s" // shell
+	start := cmd.Cmd("date '+%s%N'")
+	starts, _ := strconv.ParseFloat(start, 64)
+
 	wg.Add(g)
 	for i := 0; i < g; i++ {
 		ch := make(chan struct{})
-		go func() {
-			time.Sleep(time.Second * t2)
+		go func(ch chan struct{}) {
+			cmd.Cmd(sleep) // shell
 			ch <- struct{}{}
-		}()
-		go func() {
+		}(ch)
+		go func(ch chan struct{}) {
 			var k = int64(0)
 			for {
 				select {
@@ -49,9 +55,10 @@ func FOR(g, t int) {
 		label:
 			j += k
 			wg.Done()
-		}()
+		}(ch)
 	}
 	wg.Wait()
-	ts := time.Since(start).Seconds()
-	fmt.Printf("%.3f 秒内 %v 个协程加了 %v 次\n", ts, g, j)
+	end := cmd.Cmd("date '+%s%N'")
+	ends, _ := strconv.ParseFloat(end, 64)
+	fmt.Printf("%.3f 秒内 %v 个协程加了 %v 次\n", (ends-starts)/1e9, g, j)
 }

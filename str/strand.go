@@ -7,13 +7,11 @@ import (
 )
 
 /*
-goos: windows
-goarch: amd64
-cpu: Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz
-
-BenchmarkR-8   	  925561	      1392 ns/op	     791 B/op	       5 allocs/op
-
-BenchmarkR2-8    	   11523	    103789 ns/op	     120 B/op	       3 allocs/op
+	goos: windows
+	goarch: amd64
+	cpu: Intel(R) Core(TM) i3-10100F CPU @ 3.60GHz
+	BenchmarkR-8   	  925561	      1392 ns/op	     791 B/op	       5 allocs/op
+	BenchmarkR2-8    	   11523	    103789 ns/op	     120 B/op	       3 allocs/op
 */
 
 // 乱序输出字符串
@@ -58,7 +56,7 @@ func rands(runstr []rune) []rune {
 			tmp[n] = runstr[i]
 		} else if tmp[n] != 0 { // 不为空
 			rand.Seed(time.Now().UnixNano())
-			switch rand.Intn(5) {
+			switch rand.Intn(4) {
 			case 1, 3:
 				for j := 0; j < len(runstr); j++ {
 					if tmp[j] == 0 {
