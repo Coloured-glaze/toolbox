@@ -20,15 +20,3 @@ func Cmd(ex string, args ...string) string {
 	}
 	return strings.Trim(str.BytetoStr(obyte), "\n") //去除换行符
 }
-
-/*
-// 执行命令
-func ChCmd(ex string, args ...string, time int) {
-	dc := gg.NewContext(0, 0)
-	tmp := strings.Builder{}
-	cmd := exec.Command(ex, args...)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*time.Duration(time))
-
-
-}
-*/

@@ -18,10 +18,9 @@ type Files struct {
 
 // 	s, _, err := ft.Readir("./", ".webp")
 // 	if err != nil {
-// 		fmt.Println(err)
-// 		return
+// 		panic(err)
 // 	}
-// 	for i, _ := range s {
+// 	for i := range s {
 // 		fmt.Printf("%#v\n\n", s[i])
 // 	}
 
@@ -44,7 +43,7 @@ func Readir(dir, suffix string) ([]Files, int, error) {
 		}
 		f.Suffix = path.Ext(f.Name)                       // 获取文件的后缀(文件类型)
 		f.NameOnly = strings.TrimSuffix(f.Name, f.Suffix) // 获取文件名称(不带后缀)
-		if f.Suffix == suffix {
+		if f.Suffix == suffix || strings.Contains(f.Name, suffix) {
 			num++                    // 判断类型 数量+1
 			files = append(files, f) // 文件名添加进切片
 		}
