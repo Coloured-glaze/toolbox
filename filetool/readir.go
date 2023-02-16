@@ -16,18 +16,12 @@ type Files struct {
 	Suffix   string // 文件的后缀(文件类型)
 }
 
-// 	s, _, err := ft.Readir("./", ".webp")
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	for i := range s {
-// 		fmt.Printf("%#v\n\n", s[i])
-// 	}
-
-// filetool.Files{Name:"four2/tmp/i_n11422.webp", NameOnly:"four2/tmp/i_n11422", Path:"four2/tmp/", FileName:"i_n11422.webp", Suffix:".webp"}
-
-// 获取指定文件夹指定后缀文件的 绝对/相对 路径
-func Readir(dir, suffix string) ([]Files, int, error) {
+// 获取文件夹包含指定名称的文件的绝对或相对路径
+func Readir(dir, name string) ([]Files, int, error) {
+	if !IsExist(dir) {
+		p, _ := os.Getwd()
+		return nil, 0, fmt.Errorf("当前的路径 %v\n未找到 %v 文件夹", p, dir)
+	}
 	files := make([]Files, 0, 32)
 	num := 0 // 文件数量
 	err := filepath.Walk(dir, func(filename string, fi os.FileInfo, err error) error {
@@ -43,7 +37,10 @@ func Readir(dir, suffix string) ([]Files, int, error) {
 		}
 		f.Suffix = path.Ext(f.Name)                       // 获取文件的后缀(文件类型)
 		f.NameOnly = strings.TrimSuffix(f.Name, f.Suffix) // 获取文件名称(不带后缀)
-		if f.Suffix == suffix || strings.Contains(f.Name, suffix) {
+		if f.Path == "" {
+			f.Path = trim(f.Name)
+		}
+		if strings.Contains(f.FileName, name) {
 			num++                    // 判断类型 数量+1
 			files = append(files, f) // 文件名添加进切片
 		}
@@ -54,3 +51,22 @@ func Readir(dir, suffix string) ([]Files, int, error) {
 	}
 	return files, num, nil
 }
+
+func trim(s string) string {
+	//	s = strings.ReplaceAll(s, "\\", "/")
+	i := strings.LastIndex(s, "\\")
+	if i < 0 {
+		return ""
+	}
+	return s[:i]
+}
+
+// f, _, err := ft.Readir("./", ".webp")
+// if err != nil {
+// 	panic(err)
+// }
+// for i := range f {
+// 	fmt.Printf("%#v\n\n", f[i])
+// }
+
+// filetool.Files{Name:"four2/tmp/i_n11422.webp", NameOnly:"four2/tmp/i_n11422", Path:"four2/tmp/", FileName:"i_n11422.webp", Suffix:".webp"}
