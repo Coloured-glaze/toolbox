@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// 文件路径
 type Files struct {
 	Name     string // 文件完整路径
 	NameOnly string // 文件完整路径(不带后缀)
@@ -16,8 +17,8 @@ type Files struct {
 	Suffix   string // 文件的后缀(文件类型)
 }
 
-// 获取文件夹包含指定名称的文件的绝对或相对路径
-func Readir(dir, name string) ([]Files, int, error) {
+// 获取文件夹包含指定名称的文件的绝对或相对路径, list 为排除列表
+func Readir(dir, name string, list []string) ([]Files, int, error) {
 	if !IsExist(dir) {
 		p, _ := os.Getwd()
 		return nil, 0, fmt.Errorf("当前的路径 %v\n未找到 %v 文件夹", p, dir)
@@ -27,6 +28,11 @@ func Readir(dir, name string) ([]Files, int, error) {
 	err := filepath.Walk(dir, func(filename string, fi os.FileInfo, err error) error {
 		if fi.IsDir() { // 忽略目录
 			return nil
+		}
+		if list != nil {
+			if excluder(list, filename) { // 排除文件
+				return nil
+			}
 		}
 		d, _ := path.Split(filename) // 返回路径名, 和文件名
 		f := Files{
@@ -59,6 +65,15 @@ func trim(s string) string {
 		return ""
 	}
 	return s[:i]
+}
+
+func excluder(list []string, s string) bool {
+	for i := 0; i < len(list); i++ {
+		if exist := strings.Contains(s, list[i]); exist {
+			return true
+		}
+	}
+	return false
 }
 
 // f, _, err := ft.Readir("./", ".webp")
