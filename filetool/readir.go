@@ -83,7 +83,7 @@ func addFile(files *[]Files, f *Files, suffix *[]string, num int) int {
 	return num
 }
 
-// f, _, err := ft.Readir("./", ".webp")
+// f, _, err := ft.Readir("./", []string{".webp"}, nil)
 // if err != nil {
 // 	panic(err)
 // }
