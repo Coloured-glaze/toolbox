@@ -1,22 +1,21 @@
 package cmd
 
 import (
-	"fmt"
 	"os/exec"
 	"strings"
 
 	"github.com/Coloured-glaze/toolbox/str"
 )
 
-// 调用 命令
-func Cmd(ex string, args ...string) string {
+// 执行命令
+func Cmd(ex string, args ...string) (string, error) {
 	cmd := exec.Command(ex, args...)
-	obyte, err := cmd.CombinedOutput() // 获取输出
+	output, err := cmd.CombinedOutput() // 获取输出
 	if err != nil {
-		return fmt.Sprintf("%v %v", str.BytetoStr(obyte), err)
+		return str.BytetoStr(output), err
 	}
-	if len(obyte) == 0 {
-		return ""
+	if len(output) == 0 {
+		return "", nil
 	}
-	return strings.Trim(str.BytetoStr(obyte), "\n") //去除换行符
+	return strings.Trim(str.BytetoStr(output), "\n"), nil //去除换行符
 }

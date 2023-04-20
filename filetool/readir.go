@@ -17,11 +17,11 @@ type Files struct {
 	Suffix   string // 文件的后缀(文件类型)
 }
 
-// 获取文件夹包含指定名称的文件的绝对或相对路径, list 为排除列表
+// 获取 dir 包含的指定 name 的文件的绝对或相对路径, list 为排除列表
 func Readir(dir string, name []string, list []string) ([]Files, int, error) {
 	if !IsExist(dir) {
 		p, _ := os.Getwd()
-		return nil, 0, fmt.Errorf("当前的路径 %v\n未找到 %v 文件夹", p, dir)
+		return nil, 0, fmt.Errorf("当前的路径 %v 未找到 >%v< 文件夹", p, dir)
 	}
 	files := make([]Files, 0, 32)
 	num := 0 // 文件数量
@@ -66,8 +66,10 @@ func trim(s string) string {
 
 func excluder(list []string, s string) bool {
 	for i := 0; i < len(list); i++ {
-		if exist := strings.Contains(s, list[i]); exist {
-			return true
+		if list[i] != "" {
+			if exist := strings.Contains(s, list[i]); exist {
+				return true
+			}
 		}
 	}
 	return false
