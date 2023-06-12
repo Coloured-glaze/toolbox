@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"sync"
 
+	"github.com/Coloured-glaze/toolbox/check"
 	"github.com/Coloured-glaze/toolbox/cmd"
 )
 
@@ -32,8 +33,10 @@ func Forc(g, t int) {
 
 	ss, _ := strconv.ParseFloat(strconv.Itoa(int(times)), 64)
 	sleep := "sleep " + strconv.Itoa(int(ss)) + "s" // shell
-	start := cmd.Cmd("date '+%s%N'")
-	starts, _ := strconv.ParseFloat(start, 64)
+	start, err := cmd.Cmd("date '+%s%N'")
+	check.Checker(err)
+	starts, err := strconv.ParseFloat(start, 64)
+	check.Checker(err)
 
 	wg.Add(g)
 	for i := 0; i < g; i++ {
@@ -58,7 +61,9 @@ func Forc(g, t int) {
 		}(ch)
 	}
 	wg.Wait()
-	end := cmd.Cmd("date '+%s%N'")
-	ends, _ := strconv.ParseFloat(end, 64)
+	end, err := cmd.Cmd("date '+%s%N'")
+	check.Checker(err)
+	ends, err := strconv.ParseFloat(end, 64)
+	check.Checker(err)
 	fmt.Printf("%.3f 秒内 %v 个协程加了 %v 次\n", (ends-starts)/1e9, g, j)
 }

@@ -17,8 +17,8 @@ type Files struct {
 	Suffix   string // 文件的后缀(文件类型)
 }
 
-// 获取 dir 包含的指定 name 的文件的绝对或相对路径, list 为排除列表
-func Readir(dir string, name []string, list []string) ([]Files, int, error) {
+// 获取 dir 包含的指定 name 的文件的绝对或相对路径, exclude 为排除列表
+func Readir(dir string, name []string, exclude []string) ([]Files, int, error) {
 	if !IsExist(dir) {
 		p, _ := os.Getwd()
 		return nil, 0, fmt.Errorf("当前的路径 %v 未找到 >%v< 文件夹", p, dir)
@@ -29,8 +29,8 @@ func Readir(dir string, name []string, list []string) ([]Files, int, error) {
 		if fi.IsDir() { // 忽略目录
 			return nil
 		}
-		if list != nil {
-			if excluder(list, filename) { // 排除文件
+		if exclude != nil {
+			if excluder(exclude, filename) { // 排除文件
 				return nil
 			}
 		}
@@ -85,7 +85,7 @@ func addFile(files *[]Files, f *Files, suffix *[]string, num int) int {
 	return num
 }
 
-// f, _, err := ft.Readir("./", []string{".webp"}, nil)
+// f, _, err := ft.Readir("./", []string{".webp"}, []string{}, nil)
 // if err != nil {
 // 	panic(err)
 // }

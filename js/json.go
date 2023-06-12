@@ -24,6 +24,11 @@ func Analyze(a any, config string) error {
 	return nil
 }
 
+// 加载json配置
+func Load(a any, config string) error {
+	return Analyze(a, config)
+}
+
 // 保存json配置. 类型, 配置名, 权限: 例如 0600
 func Save(a any, config string, perm os.FileMode) error {
 	b, err := json.Marshal(a)

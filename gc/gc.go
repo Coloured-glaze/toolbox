@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/Coloured-glaze/toolbox/check"
 	"github.com/Coloured-glaze/toolbox/cmd"
 	ft "github.com/Coloured-glaze/toolbox/filetool"
 )
@@ -28,9 +29,11 @@ func GetRAM() string {
 	if runtime.GOOS == "windows" {
 		return "Error! Don't Windows!"
 	}
-	R := cmd.Cmd("free -m | awk '/Mem/ {print $2\" \"$3}'")
+	R, err := cmd.Cmd("free -m | awk '/Mem/ {print $2\" \"$3}'")
+	check.Checker(err)
 	if len(R) == 0 {
-		R = cmd.Cmd("free -m | awk '/内存/ {print $2\" \"$3}'")
+		R, err = cmd.Cmd("free -m | awk '/内存/ {print $2\" \"$3}'")
+		check.Checker(err)
 	}
 	if len(R) > 2 {
 		sp := strings.Split(R, " ")
