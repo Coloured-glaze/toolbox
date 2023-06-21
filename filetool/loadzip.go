@@ -11,7 +11,7 @@ import (
 	"github.com/golang/freetype/truetype"
 )
 
-type Ftool struct {
+type Zipfs struct {
 	Ok   bool          // 是否存在
 	Open bool          // 是否打开
 	Err  error         // 错误
@@ -63,8 +63,8 @@ func LoadFontFaces(dc *gg.Context, points float64, path string, name string, fil
 }
 
 // 查找map中的文件
-func Findfile(path string, name string, open bool, filemap map[string][]*zip.File) Ftool {
-	var ft Ftool
+func Findfile(path string, name string, open bool, filemap map[string][]*zip.File) Zipfs {
+	var ft Zipfs
 	ft.Open = open
 	for i := range filemap[path] {
 		if strings.Contains(filemap[path][i].Name, name) {

@@ -10,11 +10,12 @@ import (
 
 // 文件路径
 type Files struct {
-	Name     string // 文件完整路径
-	NameOnly string // 文件完整路径(不带后缀)
-	Path     string // 路径(不带文件名)
-	FileName string // 完整文件名(不带路径)
-	Suffix   string // 文件的后缀(文件类型)
+	Name         string // 文件完整路径
+	NameOnly     string // 文件完整路径(不带后缀)
+	FileName     string // 完整文件名(不带路径)
+	NameNosuffix string // 文件名(不带后缀和路径)
+	Suffix       string // 文件的后缀(文件类型)
+	Path         string // 路径(不带文件名)
 }
 
 // 获取 dir 包含的指定 name 的文件的绝对或相对路径, exclude 为排除列表
@@ -30,19 +31,20 @@ func Readir(dir string, name []string, exclude []string) ([]Files, int, error) {
 			return nil
 		}
 		if exclude != nil {
-			if excluder(exclude, filename) { // 排除文件
+			if excluder(exclude, filename) {
 				return nil
 			}
 		}
-		d, _ := path.Split(filename) // 返回路径名, 和文件名
+		// _, _ := path.Split(filename) // 返回路径名, 和文件名
 		f := Files{
 			Name:     filename,  // 获取文件完整路径
-			Path:     d,         // 路径
+			Path:     dir,       // 路径
 			FileName: fi.Name(), // 获取文件名
 			//	FileName: path.Base(filename), // 获取文件名
 		}
-		f.Suffix = path.Ext(f.Name)                       // 获取文件的后缀(文件类型)
-		f.NameOnly = strings.TrimSuffix(f.Name, f.Suffix) // 获取文件名称(不带后缀)
+		f.Suffix = path.Ext(f.Name)                               // 获取文件的后缀(文件类型)
+		f.NameOnly = strings.TrimSuffix(f.Name, f.Suffix)         // 获取文件名称(不带后缀)
+		f.NameNosuffix = strings.TrimSuffix(f.FileName, f.Suffix) // 获取文件名(不带后缀和路径)
 		if f.Path == "" {
 			f.Path = trim(f.Name)
 		}
@@ -64,6 +66,7 @@ func trim(s string) string {
 	return s[:i]
 }
 
+// 排除文件
 func excluder(list []string, s string) bool {
 	for i := 0; i < len(list); i++ {
 		if list[i] != "" {
@@ -75,22 +78,31 @@ func excluder(list []string, s string) bool {
 	return false
 }
 
+// 文件名添加进切片
 func addFile(files *[]Files, f *Files, suffix *[]string, num int) int {
 	for i := range *suffix {
 		if f.Suffix == (*suffix)[i] || strings.Contains(f.Name, (*suffix)[i]) {
-			num++                           // 判断类型 数量+1
-			(*files) = append((*files), *f) // 文件名添加进切片
+			num++
+			(*files) = append((*files), *f)
 		}
 	}
 	return num
 }
 
-// f, _, err := ft.Readir("./", []string{".webp"}, []string{}, nil)
-// if err != nil {
-// 	panic(err)
-// }
-// for i := range f {
-// 	fmt.Printf("%#v\n\n", f[i])
-// }
-
-// filetool.Files{Name:"four2/tmp/i_n11422.webp", NameOnly:"four2/tmp/i_n11422", Path:"four2/tmp/", FileName:"i_n11422.webp", Suffix:".webp"}
+/*
+package main
+import (
+	"fmt"
+	"github.com/Coloured-glaze/toolbox/filetool"
+)
+func main() {
+	f, _, err := filetool.Readir(`E:\1\demo2\test_ft`, []string{"."}, []string{})
+	if err != nil {
+		panic(err)
+	}
+	for i := range f {
+		fmt.Printf("%#v\n\n", f[i])
+	}
+}
+*/
+// filetool.Files{Name:"E:\\1\\demo2\\test_ft\\read.go", NameOnly:"E:\\1\\demo2\\test_ft\\read", FileName:"read.go", NameNosuffix:"read", Suffix:".go", Path:"E:\\1\\demo2\\test_ft"}
