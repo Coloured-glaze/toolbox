@@ -18,7 +18,7 @@ type Files struct {
 	Path         string // 路径(不带文件名)
 }
 
-// 获取 dir 包含的指定 name 的文件的绝对或相对路径, exclude 为排除列表
+// 获取 dir 包含的指定 name 的文件的绝对或相对路径, exclude 为排除列表, 可为 nil
 func Readir(dir string, name []string, exclude []string) ([]Files, int, error) {
 	if !IsExist(dir) {
 		p, _ := os.Getwd()
@@ -35,10 +35,10 @@ func Readir(dir string, name []string, exclude []string) ([]Files, int, error) {
 				return nil
 			}
 		}
-		// _, _ := path.Split(filename) // 返回路径名, 和文件名
+		p, _ := path.Split(filename) // 返回路径名, 和文件名
 		f := Files{
 			Name:     filename,  // 获取文件完整路径
-			Path:     dir,       // 路径
+			Path:     p,         // 路径
 			FileName: fi.Name(), // 获取文件名
 			//	FileName: path.Base(filename), // 获取文件名
 		}
@@ -96,7 +96,7 @@ import (
 	"github.com/Coloured-glaze/toolbox/filetool"
 )
 func main() {
-	f, _, err := filetool.Readir(`E:\1\demo2\test_ft`, []string{"."}, []string{})
+	f, _, err := filetool.Readir(`E:\1\demo2\test_ft`, []string{"."}, nil)
 	if err != nil {
 		panic(err)
 	}
