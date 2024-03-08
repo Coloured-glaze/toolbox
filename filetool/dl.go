@@ -16,7 +16,7 @@ var (
 )
 
 // 下载文件
-func DownloadTo(url, file string, chkcrt bool) (n int64, err error) {
+func DownloadTo(url, savePath string, chkcrt bool) (n int64, err error) {
 	var resp *http.Response
 	switch chkcrt {
 	case true:
@@ -36,23 +36,19 @@ func DownloadTo(url, file string, chkcrt bool) (n int64, err error) {
 			switch {
 			case total > 100*1024*1024 || size > 100*1024*1024: // 100MiB
 				var f *os.File
-				f, err = os.Create(file) // 持续写入
+				f, err = os.Create(savePath) // 持续写入
 				if err == nil {
 					defer f.Close()
-					_, err = io.Copy(f, resp.Body) // 使用 io.Copy 函数将响应体复制到文件中
+					n, err = io.Copy(f, resp.Body) // 使用 io.Copy 函数将响应体复制到文件中
 				}
 			default:
 				var data []byte
 				data, err = io.ReadAll(resp.Body)
+				n = int64(len(data))
 				if err == nil {
-					err = os.WriteFile(file, data, 0700) // 一次性写入文件
+					err = os.WriteFile(savePath, data, 0700) // 一次性写入文件
 				}
 			}
-		}
-		if size > 0 {
-			n = size
-		} else if total > 0 {
-			n = total
 		}
 	}
 	return

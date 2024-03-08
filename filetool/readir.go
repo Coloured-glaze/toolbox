@@ -19,7 +19,7 @@ type Files struct {
 }
 
 // 获取 dir 包含的指定 name 的文件的绝对或相对路径, exclude 为排除列表,可为 nil
-func Readir(dir string, name []string, exclude []string) ([]Files, int, error) {
+func Readir(dir string, name, exclude []string) ([]Files, int, error) {
 	if !IsExist(dir) {
 		p, _ := os.Getwd()
 		return nil, 0, fmt.Errorf("当前的路径 %v 未找到 >%v< 文件夹", p, dir)
